@@ -18,8 +18,7 @@ public class FileHandler {
         objectMapper = new ObjectMapper();
     }
 
-    public Credentials read() {
-        Credentials credentials = new Credentials();
+    public void read() {
         InputStream is = getClass().getClassLoader().getResourceAsStream("credentials.json");
 
         StringBuilder sb = new StringBuilder();
@@ -33,12 +32,11 @@ public class FileHandler {
         }
 
         try {
-            credentials = deserialize(sb.toString());
+            Credentials.getInstance().setClientId(deserialize(sb.toString()).getClientId());
+            Credentials.getInstance().setClientSecret(deserialize(sb.toString()).getClientSecret());
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-        return credentials;
     }
 
     public Credentials deserialize(String s) throws JsonMappingException, JsonProcessingException {
