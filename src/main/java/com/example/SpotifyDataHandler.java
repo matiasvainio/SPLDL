@@ -6,10 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -96,5 +100,44 @@ public class SpotifyDataHandler {
         }
 
         return map;
+    }
+
+    public void getSomething() {
+        try {
+            URL url = new URL("https://api.spotify.com/v1/users/ivtods7bx6yftyegcny1p71de/playlists/0py3Af5F3zlsx2aZUlqXy9");
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Authorization",
+                    "Bearer " + Credentials.getInstance().getAccessToken());
+
+            StringBuilder content;
+
+            try (BufferedReader br =
+                    new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                String line;
+                content = new StringBuilder();
+
+                while ((line = br.readLine()) != null) {
+                    content.append(line);
+                    content.append(System.lineSeparator());
+                }
+            }
+
+            writeToFile(content.toString());
+
+            con.disconnect();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeToFile(String s) {
+        try {
+            Files.write(Paths.get("src/main/resources/tracks.json"), s.getBytes());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }

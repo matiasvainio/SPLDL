@@ -23,8 +23,7 @@ public class UI implements Runnable {
                 case "1":
                     System.out.println(Credentials.getInstance());
                 case "2":
-                    spotifyDataHandler.getTokens();
-                    System.out.println(Credentials.getInstance());
+                    spotifyDataHandler.getSomething();
             }
         }
 
